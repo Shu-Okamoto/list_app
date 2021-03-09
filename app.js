@@ -156,7 +156,7 @@ app.get('/article/:id', (req, res) => {
             if (isEqual){
               req.session.userId = results[0].id;
               req.session.username = results[0].username;
-              res.redirect('/list');
+              res.redirect('/itemlist');
             }else{
               res.redirect('/login');
             }
@@ -173,7 +173,16 @@ app.get('/article/:id', (req, res) => {
       res.redirect('/list');
     });
   });
-  
+
+  app.get('/itemList', (req, res) => {
+    connection.query(
+      'SELECT * FROM categorys',
+      (error, results) => {
+        res.render('itemList.ejs', {categorys: results});
+      }
+    );
+  });
+
   app.get('/list', (req, res) => {
     connection.query(
       'SELECT * FROM articles',
@@ -182,41 +191,57 @@ app.get('/article/:id', (req, res) => {
       }
     );
   });
-  app.get('/new', (req, res) => {
-    res.render('new.ejs');
+  app.get('/new/:id', (req, res) => {
+      res.render('new.ejs',{req: req});
   });
-  
+  app.get('/new', (req, res) => {
+    res.render('new.ejs',{req: req});
+});
+
   app.post('/create', (req, res) => {
     
-    if(req.body,categoryId > 0){
+    if(req.body.categoryName !== "" || req.body.subcategoryName === NULL){
       connection.query(
-      'INSERT INTO subcategorys (name,categoryId) VALUES (?,?)',
-      [req.body.subcategoryName,req.body.categoryId],
-      (error, results) => {
-        res.redirect('/itemlist');
+        'INSERT INTO categorys (name) VALUES (?)',
+        [req.body.categoryName],
+        (error, results) => {
+          res.redirect('/itemlist');
+
+
       }
     );
     
-      if(req.body.subcategoryId > 0){
-        connection.query(
-        'INSERT INTO items (name,categoryId,subcategoryId) VALUES (?,?,?)',
-        [req.body.itemName,req.body.categoryId,req.body.subcategoryId],
-        (error, results) => {
-          res.redirect('/itemlist');
-        }
-      );
+ /*     if(req.body.subcategoryName !== "" || req.body.subcategoryName !== NULL){
+       
       } else {
           connection.query(
-          'INSERT INTO categorys (name) VALUES (?)',
-          [req.body.categoryName],
-          (error, results) => {
-            res.redirect('/itemlist');
+            'INSERT INTO items (name,categoryid,subcategoryid) VALUES (?,?,?)',
+            [req.body.itemName,req.body.categoryId,req.body.subcategoryId],
+            (error, results) => {
+              res.redirect('/itemlist');
+              console.log("商品登録した");
+    
           }
         );
-        }
-    }
+        }*/
+      }else{
+         res.redirect('/new',error);
+      }
+
+    
  });
   
+  app.post('/create/:id',(req,res) => {
+    connection.query(
+    'INSERT INTO subcategorys (name,category_id) VALUES (?,?)',
+    [req.body.subcategoryName,req.body.categoryId],
+    (error, results) => {
+      res.redirect('/itemlist');
+     
+     }
+    );
+  });
+
   app.post('/delete/:id', (req, res) => {
     if(req.body.subcategoryId > 0 ){
       connection.query(
@@ -248,14 +273,14 @@ app.get('/article/:id', (req, res) => {
   
   app.get('/edit/:id', (req, res) => {
     // 選択されたメモをデータベースから取得する処理を書いてください
-    connection.query('SELECT * FROM items WHERE id=?',[req.params.id],(error,results)=>{
-      res.render('edit.ejs',{item: results[0]});
+    connection.query('SELECT * FROM categorys WHERE id=?',[req.params.id],(error,results)=>{
+      res.render('edit.ejs',{category: results[0]});
     })
   });
   
   app.post('/update/:id', (req, res) => {
     // 選択されたメモを更新する処理を書いてください
-    connection.query('UPDATE items SET name=? WHERE id=?',[req.body.itemName,req.params.id],(error,results) =>{
+    connection.query('UPDATE categorys SET name=? WHERE id=?',[req.body.categoryName,req.params.id],(error,results) =>{
       res.redirect('/itemlist');
       })
   });

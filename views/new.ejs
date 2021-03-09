@@ -3,15 +3,42 @@
   <head>
     <meta charset="utf-8">
     <title>LIST APP</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style2.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <script src="/send_url.js"></script>
   </head>
   <body>
     <header>
       <a href="/" class="header-logo">LIST APP</a>
     </header>
+
     <div class="container">
+     <% if(req.url === "/new"){ %>
       <div class="container-header">
+        <h1>カテゴリ登録</h1>
+      </div>
+      <div class="item-form-wrapper">
+        <p class="form-label">カテゴリ</p>
+        <form action="/create" method="post">
+          <input type="text" name="categoryName">
+          <input type="submit" value="登録する">
+        </form>
+      </div>
+<% } %>
+<% if(req.url !== "/new"){ %>
+      <div class="container-header">
+        <h1>サブカテゴリ登録</h1>
+      </div>
+      <div class="item-form-wrapper">
+        <p class="form-label">サブカテゴリ</p>
+        <form action="/create/<%=req.params.id%>" method="post">
+          <input type="text" name="subcategoryName">
+          <input type="hidden" name="categoryId" value="<%=req.params.id%>">
+          <input type="submit" value="登録する">
+        </form>
+      </div>
+<% } %>
+      <!--      <div class="container-header">
         <h1>商品登録</h1>
       </div>
       <div class="item-form-wrapper">
@@ -21,10 +48,10 @@
           <textarea></textarea>
           <input type="image" name="image">
           <input type="number" name="stock">
-          <input type="submit" value="作成する">
+          <input type="submit" value="登録する">
         </form>
-      </div>
-      <a href="/index" class="cancel-button"></span>もどる</a>
+      </div>-->
+      <a href="/itemlist" class="cancel-button"><span class="fa fa-home"></span>もどる</a>
     </div>
   </body>
 </html>

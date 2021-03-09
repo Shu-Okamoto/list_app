@@ -3,7 +3,8 @@
   <head>
     <meta charset="utf-8">
     <title>LIST APP</title>
-    <link rel="stylesheet" href="/css/style.css">
+    <link rel="stylesheet" href="/css/style2.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
     <script src="/send_url.js"></script>
   </head>
   <body>
@@ -12,17 +13,17 @@
     </header>
     <div class="container">
       <div class="container-header">
-        <h1>商品編集</h1>
+        <h1>カテゴリ編集</h1>
       </div>
       <div class="item-form-wrapper">
         <p class="form-label">商品</p>
-        <form>
+        <form action="/update/<%=category.id%>" method="post">
           <!-- value属性を指定してください -->
-          <input type="text" value="<%=item.name%>">
+          <input type="text" name="categoryName" value="<%=category.name%>">
           <input type="submit" value="更新する">
         </form>
       </div>
-      <a href="/index" class="cancel-button"></span>もどる</a>
+      <a href="/itemlist" class="cancel-button"><span class="fa fa-home"></span>もどる</a>
     </div>
   </body>
 </html>
